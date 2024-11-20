@@ -25,6 +25,7 @@ import android.view.KeyEvent
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Lifecycle
@@ -52,7 +53,7 @@ class VideoBrowserActivity : AppCompatActivity() {
     private var mToolbar: Toolbar? = null
     private var mIntroductoryOverlay: IntroductoryOverlay? = null
     private var mCastStateListener: CastStateListener? = null
-    private val  castExecutor: Executor = Executors.newSingleThreadExecutor();
+    private val castExecutor: Executor = Executors.newSingleThreadExecutor();
     private var hasValidCastContextOnResume = false
 
     private inner class MySessionManagerListener : SessionManagerListener<CastSession> {
@@ -74,10 +75,17 @@ class VideoBrowserActivity : AppCompatActivity() {
         }
 
         override fun onSessionStarting(session: CastSession) {}
+
         override fun onSessionStartFailed(session: CastSession, error: Int) {}
+
         override fun onSessionEnding(session: CastSession) {}
+
         override fun onSessionResuming(session: CastSession, sessionId: String) {}
-        override fun onSessionResumeFailed(session: CastSession, error: Int) {}
+
+        override fun onSessionResumeFailed(session: CastSession, error: Int) {
+            Toast.makeText(this@VideoBrowserActivity, "[id: ${session.sessionId}] session resume failed(error code: $error)", Toast.LENGTH_SHORT).show()
+        }
+
         override fun onSessionSuspended(session: CastSession, reason: Int) {}
     }
 
